@@ -1,0 +1,29 @@
+backend/
+│
+├── AlertaJa.Api/
+│   ├── Controllers/
+│   │   ├── MedicoesController.cs
+│   │   ├── AlertasController.cs
+│   │   ├── RegioesController.cs
+│   │   └── SensoresController.cs
+│   │
+│   ├── Models/
+│   │   ├── Regiao.cs
+│   │   ├── Sensor.cs
+│   │   ├── Medicao.cs
+│   │   └── Alerta.cs
+│   │
+│   ├── DTOs/
+│   ├── Services/
+│   │   ├── MedicaoService.cs
+│   │   └── MotorAlertasService.cs
+│   │
+│   ├── Data/
+│   │   └── AppDbContext.cs
+│   │
+│   ├── Enums/
+│   ├── appsettings.json
+│   ├── appsettings.Development.json
+│   └── Program.cs
+│
+└── AlertaJa.sln
