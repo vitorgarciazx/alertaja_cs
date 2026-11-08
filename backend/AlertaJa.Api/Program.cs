@@ -1,4 +1,13 @@
+using AlertaJa.Api.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration
+    .GetConnectionString("OracleConnection");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseOracle(connectionString));
 
 // Add services to the container.
 
