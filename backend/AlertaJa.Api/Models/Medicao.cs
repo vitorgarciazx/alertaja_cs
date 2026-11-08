@@ -1,0 +1,14 @@
+﻿namespace AlertaJa.Api.Models
+{
+    public class Medicao
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string SensorId { get; set; } = string.Empty;
+        public decimal Valor { get; set; }
+        public DateTime DataHora { get; set; }
+        public DateTime CriadoEm { get; set; }
+
+        // Relacionamentos
+        public Sensor? Sensor { get; set; }
+    }
+}
