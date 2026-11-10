@@ -4,6 +4,7 @@
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string SensorId { get; set; } = string.Empty;
+        public Guid SensorId { get; set; }
         public decimal Valor { get; set; }
         public DateTime DataHora { get; set; }
         public DateTime CriadoEm { get; set; }
