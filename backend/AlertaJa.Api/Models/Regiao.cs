@@ -10,6 +10,7 @@
         public bool Ativo { get; set; }
         public DateTime CriadoEm { get; set; }
         public DateTime AtualizadoEm { get; set; }
+        public DateTime? AtualizadoEm { get; set; }
 
         // Relacionamentos
         public ICollection<Sensor> Sensores { get; set; } = new List<Sensor>();
