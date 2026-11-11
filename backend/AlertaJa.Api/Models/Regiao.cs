@@ -9,7 +9,6 @@
         public string NivelRiscoAtual { get; set; } = "NORMAL";
         public bool Ativo { get; set; }
         public DateTime CriadoEm { get; set; }
-        public DateTime AtualizadoEm { get; set; }
         public DateTime? AtualizadoEm { get; set; }
 
         // Relacionamentos

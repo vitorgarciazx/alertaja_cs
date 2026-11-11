@@ -3,7 +3,6 @@
     public class Sensor
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public string RegiaoId { get; set; } = string.Empty;
         public Guid RegiaoId { get; set; }
         public string CodigoIdentificador { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;

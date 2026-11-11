@@ -205,7 +205,7 @@ namespace AlertaJa.Api.Data
                 entity.Property(m => m.CriadoEm)
                     .HasColumnName("CRIADO_EM")
                     .HasColumnType("TIMESTAMP")
-                    .HasDefaultValue("CURRENT_TIMESTAMP");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.HasOne(m => m.Sensor)
                     .WithMany(s => s.Medicoes)
@@ -222,13 +222,13 @@ namespace AlertaJa.Api.Data
 
                 entity.Property(a => a.Id)
                     .HasColumnName("ID")
-                    .HasColumnType("VARCHAR2(26)")
+                    .HasColumnType("VARCHAR2(36)")
                     .HasConversion<string>()
                     .ValueGeneratedNever();
 
                 entity.Property(a => a.RegiaoId)
                     .HasColumnName("REGIAO_ID")
-                    .HasColumnType("VARCHAR2(26)")
+                    .HasColumnType("VARCHAR2(36)")
                     .HasConversion<string>()
                     .IsRequired();
 
@@ -255,7 +255,7 @@ namespace AlertaJa.Api.Data
                     .IsRequired();
 
                 entity.Property(a => a.Status)
-                    .HasColumnName("TITULO")
+                    .HasColumnName("STATUS")
                     .HasMaxLength(20)
                     .HasDefaultValue("ATIVO")
                     .IsRequired();
@@ -285,7 +285,7 @@ namespace AlertaJa.Api.Data
 
                 entity.HasOne(a => a.MedicaoOrigem)
                     .WithMany()
-                    .HasForeignKey(a => a.MedicaoOrigem)
+                    .HasForeignKey(a => a.MedicaoOrigemId)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(a => a.MedicaoUltima)
