@@ -14,6 +14,7 @@ namespace AlertaJa.Api.DTOs.Regioes
 
         [Required(ErrorMessage = "O estado é obrigatório.")]
         [StringLength(2, MinimumLength = 2, ErrorMessage = "O estado deve possuir exatamente 2 caracteres.")]
-        public string Estado { get; set; } = string.Empty; 
+        public string Estado { get; set; } = string.Empty;
+
      }
 }

@@ -101,6 +101,7 @@ namespace AlertaJa.Api.Services
             regiao.Nome = dto.Nome.Trim();
             regiao.Cidade = dto.Cidade.Trim();
             regiao.Estado = dto.Estado.Trim().ToUpperInvariant();
+            regiao.Ativo = dto.Ativo;
             regiao.AtualizadoEm = DateTime.Now;
 
             await _context.SaveChangesAsync();

@@ -13,7 +13,6 @@ namespace AlertaJa.Api.Controllers
 
         public RegioesController(RegiaoService service)
         {
-            _context = context;
             _service = service;
 
         }
