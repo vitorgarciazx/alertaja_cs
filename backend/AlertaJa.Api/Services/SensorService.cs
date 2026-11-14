@@ -40,7 +40,7 @@ namespace AlertaJa.Api.Services
 
         // listar sensor por id
 
-        public async Task<SensorResponseDto?> ObterPorId(Guid id
+        public async Task<SensorResponseDto?> ObterPorId(Guid id)
         {
             return await _context.Sensores
                 .AsNoTracking()
@@ -66,10 +66,115 @@ namespace AlertaJa.Api.Services
         // res - sensor após cadastro
         public async Task<SensorResponseDto> Criar(CriarSensorDto dto)
         {
+            var regiaoExiste = await _context.Regioes
+                 .AnyAsync(r => r.Id == dto.RegiaoId && r.Ativo);
+
+            if (!regiaoExiste)
+            {
+                throw new ArgumentException(
+                    "A região informada não existe ou está inativa");
+            }
+            
+            if (dto.LimiteAtencao >= dto.LimiteAlerta ||
+                    dto.LimiteAlerta >= dto.LimitePerigo)
+            {
+                throw new ArgumentException(
+                    "Os limites devem seguir a ordem: atenção < alerta < perigo")
+            }
+
             var sensor = new Sensor
             {
+                RegiaoId = dto.RegiaoId,
+                CodigoIdentificador = dto.CodigoIdentificador.Trim(),
+                Tipo = dto.Tipo,
+                UnidadeMedida = dto.UnidadeMedida.Trim(),
+                LimiteAtencao = dto.LimiteAtencao,
+                LimiteAlerta = dto.LimiteAlerta,
+                LimitePerigo = dto.LimitePerigo,
+            };
 
+            _context.Sensores.Add(sensor);
+
+            await _context.SaveChangesAsync();
+
+            return await _context.Sensores
+                .AsNoTracking()
+                .Where(s => s.Id == sensor.Id)
+                .Select(s => new SensorResponseDto
+                {
+                    Id = s.Id,
+                    RegiaoId = s.RegiaoId,
+                    CodigoIdentificador = s.CodigoIdentificador,
+                    Tipo = s.Tipo,
+                    UnidadeMedida = s.UnidadeMedida,
+                    LimiteAtencao = s.LimiteAtencao,
+                    LimiteAlerta = s.LimiteAlerta,
+                    LimitePerigo = s.LimitePerigo,
+                    Ativo = s.Ativo,
+                    UltimaLeitura = s.UltimaLeitura,
+                    CriadoEm = s.CriadoEm,
+                    AtualizadoEm = s.AtualizadoEm
+                })
+                .FirstAsync();
+        }
+
+        // res - sensor após atualizacao
+        public async Task<SensorResponseDto?> Atualizar(Guid id, AtualizarSensorDto dto)
+        {
+
+
+            var sensor = await _context.Sensores
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (sensor == null)
+            {
+                return null;
             }
+
+            var regiaoExiste = await _context.Regioes
+                .AnyAsync(r => r.Id == dto.RegiaoId && r.Ativo);
+
+            if (!regiaoExiste)
+            {
+                throw new ArgumentException(
+                    "A região informada não existe ou está inativa");
+            }
+
+            if (dto.LimiteAtencao >= dto.LimiteAlerta ||
+                    dto.LimiteAlerta >= dto.LimitePerigo)
+            {
+                throw new ArgumentException(
+                    "Os limites devem seguir a ordem: atenção < alerta < perigo")
+            }
+
+
+            sensor.RegiaoId = dto.RegiaoId;
+            sensor.CodigoIdentificador = dto.CodigoIdentificador.Trim();
+            sensor.Tipo = dto.Tipo;
+            sensor.UnidadeMedida = dto.UnidadeMedida.Trim();
+            sensor.LimiteAtencao = dto.LimiteAtencao;
+            sensor.LimiteAlerta = dto.LimiteAlerta;
+            sensor.LimitePerigo = dto.LimitePerigo;
+            sensor.Ativo = dto.Ativo;
+            sensor.AtualizadoEm = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return new SensorResponseDto
+            {
+                Id = sensor.Id,
+                RegiaoId = sensor.RegiaoId,
+                CodigoIdentificador = sensor.CodigoIdentificador,
+                Tipo = sensor.Tipo,
+                UnidadeMedida = sensor.UnidadeMedida,
+                LimiteAtencao = sensor.LimiteAtencao,
+                LimiteAlerta = sensor.LimiteAlerta,
+                LimitePerigo = sensor.LimitePerigo,
+                Ativo = sensor.Ativo,
+                UltimaLeitura = sensor.UltimaLeitura,
+                CriadoEm = sensor.CriadoEm,
+                AtualizadoEm = sensor.AtualizadoEm
+            };
         }
     }
 }
