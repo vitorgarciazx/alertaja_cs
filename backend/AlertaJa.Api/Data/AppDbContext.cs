@@ -128,7 +128,7 @@ namespace AlertaJa.Api.Data
                 entity.Property(s => s.Tipo)
                     .HasColumnName("TIPO")
                     .HasMaxLength(20)
-                    .IsRequired();
+                    .HasConversion<string>();
 
                 entity.Property(s => s.UnidadeMedida)
                     .HasColumnName("UNIDADE_MEDIDA")
