@@ -1,7 +1,7 @@
 ﻿
-using AlertaJa.Api.Data;
+using AlertaJa.Api.DTOs.Regioes;
+using AlertaJa.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AlertaJa.Api.Controllers
 {
@@ -9,29 +9,59 @@ namespace AlertaJa.Api.Controllers
     [Route("api/[controller]")]
     public class RegioesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly RegiaoService _service;
 
-        public RegioesController(AppDbContext context)
+        public RegioesController(RegiaoService service)
         {
-            _context = context;
+            _service = service;
+
         }
 
-        [HttpGet("teste")]
-        public async Task<IActionResult> Teste()
+        [HttpGet]
+        public async Task<IActionResult> ListarTodas() 
         {
-            var regioes = await _context.Regioes
-                .AsNoTracking()
-                .Select(r => new
-                {
-                    r.Id,
-                    r.Nome,
-                    r.Cidade,
-                    r.Estado
-                })
-                .Take(5)
-                .ToListAsync();
+            var regioes = await _service.ListarTodas();
 
             return Ok(regioes);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> ObterPorId(Guid id)
+        {
+            var regiao = await _service.ObterPorId(id);
+        
+            if (regiao == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(regiao);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Criar(CriarRegiaoDto dto)
+        {
+            var regiao = await _service.Criar(dto);
+
+            return CreatedAtAction(
+                nameof(ObterPorId),
+                new { id = regiao.Id },
+                regiao
+            );
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Atualizar(Guid id, AtualizarRegiaoDto dto)
+        {
+            var regiao = await _service.Atualizar(id, dto);
+
+            if (regiao == null)
+            {
+                return NotFound();
+
+            }
+
+            return Ok(regiao);
         }
     }
 }
