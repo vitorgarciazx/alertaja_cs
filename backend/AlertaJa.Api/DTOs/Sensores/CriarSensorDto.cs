@@ -19,15 +19,15 @@ namespace AlertaJa.Api.DTOs.Sensores
         [MaxLength(20, ErrorMessage = "A unidade de medida deve ter no máximo 20 caracteres.")]
         public string UnidadeMedida { get; set; } = string.Empty;
 
-        [Range(typeof(decimal), "1.01", "999999999.99",
+        [Range(typeof(decimal), "1", "999999999",
             ErrorMessage = "O valor limite para 'Atenção' deve ser maior que 1.")]
         public decimal LimiteAtencao { get; set; }
 
-        [Range(typeof(decimal), "1.01", "999999999.99",
+        [Range(typeof(decimal), "11", "999999999",
             ErrorMessage = "O valor limite para 'Alerta' deve ser maior que 1.")]
         public decimal LimiteAlerta { get; set; }
 
-        [Range(typeof(decimal), "1.01", "999999999.99",
+        [Range(typeof(decimal), "1", "999999999",
             ErrorMessage = "O valor limite para 'Perigo' deve ser maior que 1.")]
         public decimal LimitePerigo { get; set; }
     }

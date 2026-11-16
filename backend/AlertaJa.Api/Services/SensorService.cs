@@ -66,20 +66,21 @@ namespace AlertaJa.Api.Services
         // res - sensor após cadastro
         public async Task<SensorResponseDto> Criar(CriarSensorDto dto)
         {
-            var regiaoExiste = await _context.Regioes
-                 .AnyAsync(r => r.Id == dto.RegiaoId && r.Ativo);
+            var regiao = await _context.Regioes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Id == dto.RegiaoId);
 
-            if (!regiaoExiste)
+            if (regiao == null || !regiao.Ativo)
             {
                 throw new ArgumentException(
                     "A região informada não existe ou está inativa");
             }
-            
+
             if (dto.LimiteAtencao >= dto.LimiteAlerta ||
                     dto.LimiteAlerta >= dto.LimitePerigo)
             {
                 throw new ArgumentException(
-                    "Os limites devem seguir a ordem: atenção < alerta < perigo")
+                    "Os limites devem seguir a ordem: atenção < alerta < perigo");
             }
 
             var sensor = new Sensor
@@ -131,10 +132,11 @@ namespace AlertaJa.Api.Services
                 return null;
             }
 
-            var regiaoExiste = await _context.Regioes
-                .AnyAsync(r => r.Id == dto.RegiaoId && r.Ativo);
+            var regiao = await _context.Regioes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Id == dto.RegiaoId);
 
-            if (!regiaoExiste)
+            if (regiao == null || !regiao.Ativo)
             {
                 throw new ArgumentException(
                     "A região informada não existe ou está inativa");
@@ -144,7 +146,7 @@ namespace AlertaJa.Api.Services
                     dto.LimiteAlerta >= dto.LimitePerigo)
             {
                 throw new ArgumentException(
-                    "Os limites devem seguir a ordem: atenção < alerta < perigo")
+                    "Os limites devem seguir a ordem: atenção < alerta < perigo");
             }
 
 

@@ -96,7 +96,8 @@ namespace AlertaJa.Api.Data
                 entity.Property(r => r.Ativo)
                     .HasColumnName("ATIVO")
                     .HasColumnType("NUMBER(1)")
-                    .HasDefaultValue(true);
+                    .HasDefaultValue(true)
+                    .IsRequired();
 
                 entity.Property(r => r.CriadoEm)
                     .HasColumnName("CRIADO_EM")
@@ -123,6 +124,12 @@ namespace AlertaJa.Api.Data
                 entity.Property(s => s.CodigoIdentificador)
                     .HasColumnName("CODIGO_IDENTIFICADOR")
                     .HasMaxLength(50)
+                    .IsRequired();
+
+                entity.Property(s => s.RegiaoId)
+                    .HasColumnName("REGIAO_ID")
+                    .HasColumnType("VARCHAR2(36)")
+                    .HasConversion<string>()
                     .IsRequired();
 
                 entity.Property(s => s.Tipo)
@@ -166,7 +173,7 @@ namespace AlertaJa.Api.Data
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(s => s.AtualizadoEm)
-                    .HasColumnType("ATUALIZADO_EM")
+                    .HasColumnName("ATUALIZADO_EM")
                     .HasColumnType("TIMESTAMP");
 
                 entity.HasIndex(s => s.CodigoIdentificador)
