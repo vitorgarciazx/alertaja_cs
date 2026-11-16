@@ -1,0 +1,17 @@
+instalar dependências:
+pip install requests python-dotenv
+
+
+executar:
+
+Cenário normal
+python simulate_sensors.py
+
+Cenário de perigo
+python simulate_sensors.py --scenario perigo
+
+Todos os cenários
+python simulate_sensors --scenario all
+
+Simulação contínua
+python simulate_sensors --continuous
