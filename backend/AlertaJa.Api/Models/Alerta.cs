@@ -11,7 +11,7 @@
         public string Status { get; set; } = "ATIVO";
         public string Titulo { get; set; } = string.Empty;
         public string? Descricao { get; set; }
-        public bool Ativo { get; set; }
+        public bool Ativo { get; set; } = true;
         public DateTime DataEmissao { get; set; }
         public DateTime? DataUltimaOcorrencia { get; set; }
         public DateTime? DataResolucao { get; set; }
