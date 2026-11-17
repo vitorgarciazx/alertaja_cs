@@ -1,5 +1,4 @@
-﻿
-using AlertaJa.Api.DTOs.Regioes;
+﻿using AlertaJa.Api.DTOs.Regioes;
 using AlertaJa.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 

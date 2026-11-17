@@ -80,10 +80,9 @@ CREATE TABLE alertas (
 );
 
 -- Índices básicos (suficientes para o MVP)
-CREATE INDEX idx_usuarios_email ON usuarios(email);
+
 CREATE INDEX idx_regioes_ativo ON regioes(ativo);
 CREATE INDEX idx_sensores_regiao ON sensores(regiao_id);
-CREATE INDEX idx_sensores_codigo ON sensores(codigo_identificador);
 CREATE INDEX idx_medicoes_sensor_data ON medicoes(sensor_id, data_hora DESC);
 CREATE INDEX idx_alertas_regiao_ativo ON alertas(regiao_id, ativo);
 CREATE INDEX idx_alertas_status ON alertas(status);
