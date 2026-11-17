@@ -9,11 +9,15 @@ namespace AlertaJa.Api.Services
     public class MedicaoService
     {
         private readonly AppDbContext _context;
+private readonly AlertaService _alertaService;
 
-        public MedicaoService(AppDbContext context)
-        {
-            _context = context;
-        }
+public MedicaoService(
+    AppDbContext context,
+    AlertaService alertaService)
+{
+    _context = context;
+    _alertaService = alertaService;
+}
 
         public async Task Receber(ReceberMedicaoDto dto)
         {
@@ -52,6 +56,12 @@ namespace AlertaJa.Api.Services
             sensor.UltimaLeitura = medicao.DataHora;
 
             _context.Medicoes.Add(medicao);
+
+            await _alertaService.ProcessarMedicao(
+                sensor,
+                medicao,
+                agora
+            );
 
             await _context.SaveChangesAsync();
         }

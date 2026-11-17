@@ -25,6 +25,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<RegiaoService>();
 builder.Services.AddScoped<SensorService>();
 builder.Services.AddScoped<MedicaoService>();
+builder.Services.AddScoped<AlertaService>();
 
 var app = builder.Build();
 

@@ -15,8 +15,8 @@ import time
 from typing import Optional
 
 import requests
+import urllib3
 from dotenv import load_dotenv
-from urllib3.exceptions import InsecureRequestWarning
 
 # Carrega o .env localizado na mesma pasta deste arquivo.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -36,13 +36,35 @@ SIMULATION_INTERVAL_SECONDS = float(
     os.getenv("SIMULATION_INTERVAL_SECONDS", "2.0")
 )
 
-# O certificado HTTPS de desenvolvimento do ASP.NET pode não ser confiável
-# para o Python/requests. A verificação é desabilitada somente para localhost.
-LOCAL_HTTPS = API_BASE_URL.lower().startswith(
-    ("https://localhost", "https://127.0.0.1")
-)
-if LOCAL_HTTPS:
-    requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+# Limites de cada faixa (valor mínimo para entrar na faixa).
+# Pluviômetro em mm/h | Nível de água em cm.
+LIMITES = {
+    "pluviometro": [(50.0, "PERIGO"), (25.0, "ALERTA"), (10.0, "ATENÇÃO")],
+    "nivel_agua": [(300.0, "PERIGO"), (200.0, "ALERTA"), (100.0, "ATENÇÃO")],
+}
+
+
+def classificar(tipo: str, valor: float) -> str:
+    """Retorna o nível esperado para um valor, conforme as faixas acima."""
+    for minimo, nome in LIMITES[tipo]:
+        if valor >= minimo:
+            return nome
+    return "NORMAL"
+
+
+def tipo_do_sensor(sensor_id: str) -> Optional[str]:
+    if sensor_id == SENSOR_PLUVIOMETRO_ID:
+        return "pluviometro"
+    if sensor_id == SENSOR_NIVEL_AGUA_ID:
+        return "nivel_agua"
+    return None
+
+
+def usa_https_local(url: str) -> bool:
+    """O certificado HTTPS de desenvolvimento do ASP.NET pode não ser
+    confiável para o requests. A verificação é desabilitada somente
+    para localhost."""
+    return url.lower().startswith(("https://localhost", "https://127.0.0.1"))
 
 
 class AlertaJaClient:
@@ -51,7 +73,10 @@ class AlertaJaClient:
     def __init__(self, base_url: str):
         self.base_url = base_url.rstrip("/")
         self.session = requests.Session()
-        self.session.verify = not LOCAL_HTTPS
+        self.local_https = usa_https_local(self.base_url)
+        self.session.verify = not self.local_https
+        if self.local_https:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     def enviar_medicao(self, sensor_id: str, valor: float) -> bool:
         """Envia uma medição para POST /api/medicoes."""
@@ -62,8 +87,10 @@ class AlertaJaClient:
         }
 
         try:
-            logger.info("Enviando medição | Sensor: %s | Valor: %s",
-                        sensor_id, payload["valor"])
+            tipo = tipo_do_sensor(sensor_id)
+            esperado = classificar(tipo, payload["valor"]) if tipo else "?"
+            logger.info("Enviando medição | Sensor: %s | Valor: %s | "
+                        "Esperado: %s", sensor_id, payload["valor"], esperado)
 
             response = self.session.post(url, json=payload, timeout=10)
 
@@ -98,52 +125,64 @@ class AlertaJaClient:
 
 def executar_cenario_normal(client: AlertaJaClient):
     print("\n=== CENÁRIO: NORMAL ===")
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 5.0)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 5.0)       # NORMAL
     time.sleep(1)
-    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 1.2)
+    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 45.0)       # NORMAL
 
 
 def executar_cenario_atencao(client: AlertaJaClient):
     print("\n=== CENÁRIO: ATENÇÃO ===")
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 28.5)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 12.0)      # ATENÇÃO
     time.sleep(2)
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 32.0)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 20.5)      # ATENÇÃO
+    time.sleep(2)
+    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 150.0)      # ATENÇÃO
 
 
 def executar_cenario_alerta(client: AlertaJaClient):
     print("\n=== CENÁRIO: ALERTA ===")
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 48.0)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 38.0)      # ALERTA
+    time.sleep(2)
+    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 250.0)      # ALERTA
 
 
 def executar_cenario_perigo(client: AlertaJaClient):
     print("\n=== CENÁRIO: PERIGO ===")
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 72.5)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 72.5)      # PERIGO
+    time.sleep(2)
+    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 340.0)      # PERIGO
 
 
 def executar_cenario_recuperacao(client: AlertaJaClient):
     print("\n=== CENÁRIO: RECUPERAÇÃO ===")
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 25.0)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 30.0)      # ALERTA
     time.sleep(2)
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 4.0)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 15.0)      # ATENÇÃO
+    time.sleep(2)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 4.0)       # NORMAL
+    time.sleep(2)
+    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 60.0)       # NORMAL
 
 
 def executar_cenario_multiplos(client: AlertaJaClient):
     print("\n=== CENÁRIO: MÚLTIPLOS SENSORES ===")
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 75.0)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 75.0)      # PERIGO
     time.sleep(2)
-    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 3.0)
+    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 320.0)      # PERIGO
     time.sleep(2)
-    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 5.0)
+    client.enviar_medicao(SENSOR_PLUVIOMETRO_ID, 5.0)       # NORMAL
     time.sleep(2)
-    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 1.1)
+    client.enviar_medicao(SENSOR_NIVEL_AGUA_ID, 110.0)      # ATENÇÃO
 
 
 def executar_simulacao_continua(client: AlertaJaClient, intervalo: float):
     """Percorre uma curva simples de chuva e elevação do nível do rio."""
+    # Chuva em mm/h: N, N, A, AL, AL, P, P, P, AL, A, A, N
     padroes_chuva = [5.0, 8.0, 15.0, 26.0, 38.0, 52.0,
                      68.0, 62.0, 44.0, 22.0, 10.0, 3.0]
-    padroes_rio = [1.2, 1.4, 1.8, 2.2, 2.8, 3.7,
-                   4.8, 5.8, 5.2, 3.9, 2.6, 1.3]
+    # Nível em cm (atrasa em relação à chuva): N, N, N, A, A, AL, P, P, P, AL, A, N
+    padroes_rio = [40.0, 55.0, 90.0, 140.0, 190.0, 260.0,
+                   340.0, 380.0, 310.0, 220.0, 130.0, 60.0]
 
     ciclo = 0
     print("\nSimulação contínua iniciada. Pressione Ctrl+C para parar.")
@@ -230,7 +269,7 @@ def main():
 
     client = AlertaJaClient(args.url)
 
-    if LOCAL_HTTPS and args.url == API_BASE_URL:
+    if client.local_https:
         logger.warning(
             "Verificação do certificado HTTPS desabilitada apenas "
             "para o servidor local de desenvolvimento."

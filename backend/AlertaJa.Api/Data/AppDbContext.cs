@@ -253,12 +253,12 @@ namespace AlertaJa.Api.Data
 
                 entity.Property(a => a.MedicaoUltimaId)
                     .HasColumnName("MEDICAO_ULTIMA_ID")
-                    .HasColumnType("VARCHAR(36)")
+                    .HasColumnType("VARCHAR2(36)")
                     .HasConversion<string>();
 
                 entity.Property(a => a.Nivel)
                     .HasColumnName("NIVEL")
-                    .HasColumnType("VARCHAR(20)")
+                    .HasColumnType("VARCHAR2(20)")
                     .IsRequired();
 
                 entity.Property(a => a.Status)
@@ -270,6 +270,16 @@ namespace AlertaJa.Api.Data
                 entity.Property(a => a.Titulo)
                     .HasColumnName("TITULO")
                     .HasMaxLength(150)
+                    .IsRequired();
+
+                entity.Property(a => a.Descricao)
+                    .HasColumnName("DESCRICAO")
+                    .HasColumnType("CLOB");
+
+                entity.Property(s => s.Ativo)
+                    .HasColumnName("ATIVO")
+                    .HasColumnType("NUMBER(1)")
+                    .HasDefaultValue(true)
                     .IsRequired();
 
                 entity.Property(a => a.DataEmissao)
