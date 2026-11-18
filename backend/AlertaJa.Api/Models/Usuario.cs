@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata;
-
-namespace AlertaJa.Api.Models
+﻿namespace AlertaJa.Api.Models
 {
     public class Usuario
     {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 ﻿using AlertaJa.Api.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace AlertaJa.Api.Data
 {
@@ -54,7 +53,6 @@ namespace AlertaJa.Api.Data
 
                 entity.Property(u => u.CriadoEm)
                     .HasColumnName("CRIADO_EM")
-                    .HasColumnName("TIMESTAMP")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
