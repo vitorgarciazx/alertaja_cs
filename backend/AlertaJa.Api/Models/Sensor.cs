@@ -12,7 +12,7 @@ namespace AlertaJa.Api.Models
         public decimal LimiteAtencao { get; set; }
         public decimal LimiteAlerta { get; set; }
         public decimal LimitePerigo { get; set; }
-        public bool Ativo { get; set; }
+        public bool Ativo { get; set; } = true;
         public DateTime? UltimaLeitura { get; set; }
         public DateTime CriadoEm { get; set; }
         public DateTime? AtualizadoEm { get; set; }

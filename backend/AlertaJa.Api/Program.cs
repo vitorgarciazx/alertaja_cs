@@ -9,6 +9,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
+var diretorio = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+while (diretorio != null &&
+       !File.Exists(Path.Combine(diretorio.FullName, ".env")))
+{
+    diretorio = diretorio.Parent;
+}
+
+if (diretorio == null)
+    throw new FileNotFoundException("Arquivo .env não encontrado.");
+
+DotNetEnv.Env.Load(Path.Combine(diretorio.FullName, ".env"));
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration
@@ -31,8 +44,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<RegiaoService>();
 builder.Services.AddScoped<SensorService>();
 builder.Services.AddScoped<MedicaoService>();
-<<<<<<< Updated upstream
-=======
 builder.Services.AddScoped<AlertaService>();
 builder.Services.AddScoped<AuthService>();
 
@@ -73,7 +84,6 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
->>>>>>> Stashed changes
 
 var app = builder.Build();
 

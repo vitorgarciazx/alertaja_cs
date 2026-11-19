@@ -16,11 +16,17 @@ from typing import Optional
 
 import requests
 from dotenv import load_dotenv
+from pathlib import Path
 from urllib3.exceptions import InsecureRequestWarning
 
-# Carrega o .env localizado na mesma pasta deste arquivo.
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+# Carrega o .env localizado na raiz do projeto
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
+# Pega a api key armazenada no .env
+API_KEY = os.getenv("ALERTAJA_API_KEY")
+
+if not API_KEY:
+    raise RuntimeError("ALERTAJA_API_KEY não configurada.")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -65,7 +71,16 @@ class AlertaJaClient:
             logger.info("Enviando medição | Sensor: %s | Valor: %s",
                         sensor_id, payload["valor"])
 
-            response = self.session.post(url, json=payload, timeout=10)
+            headers = {
+                "X-API-Key": API_KEY
+            }
+
+            response = self.session.post(
+                url,
+                json=payload,
+                headers=headers,
+                timeout=10
+            )
 
             if response.ok:
                 logger.info("Medição enviada com sucesso (HTTP %d).",

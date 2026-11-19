@@ -1,29 +1,184 @@
-backend/
-│
-├── AlertaJa.Api/
-│   ├── Controllers/
-│   │   ├── MedicoesController.cs
-│   │   ├── AlertasController.cs
-│   │   ├── RegioesController.cs
-│   │   └── SensoresController.cs
-│   │
-│   ├── Models/
-│   │   ├── Regiao.cs
-│   │   ├── Sensor.cs
-│   │   ├── Medicao.cs
-│   │   └── Alerta.cs
-│   │
-│   ├── DTOs/
-│   ├── Services/
-│   │   ├── MedicaoService.cs
-│   │   └── MotorAlertasService.cs
-│   │
-│   ├── Data/
-│   │   └── AppDbContext.cs
-│   │
-│   ├── Enums/
-│   ├── appsettings.json
-│   ├── appsettings.Development.json
-│   └── Program.cs
-│
-└── AlertaJa.sln
+alertaja_cs/
+├── backend/
+│   └── AlertaJa.Api/
+│       ├── .vs/
+│       │   ├── AlertaJa.Api/
+│       │   │   └── CopilotIndices/
+│       │   │       └── 18.10.1207.43936/
+│       │   │           ├── SemanticSymbols.db
+│       │   │           ├── SemanticSymbols.db-shm
+│       │   │           └── SemanticSymbols.db-wal
+│       │   ├── AlertaJa.Api.slnx/
+│       │   │   ├── config/
+│       │   │   │   └── applicationhost.config
+│       │   │   ├── copilot-chat/
+│       │   │   │   └── 6c520e04/
+│       │   │   │       └── sessions/
+│       │   │   ├── DesignTimeBuild/
+│       │   │   │   └── .dtbcache.v2
+│       │   │   ├── FileContentIndex/
+│       │   │   │   ├── 00347e53-7af3-4457-bebf-21acc48221ac.vsidx
+│       │   │   │   ├── 420b87c4-84f2-4fc9-a5be-4dca21b45716.vsidx
+│       │   │   │   ├── 4e6ecb8e-164b-4b8e-9e31-15af3597b177.vsidx
+│       │   │   │   ├── 5b2ef5b0-c29e-435d-929a-4ded6a62db54.vsidx
+│       │   │   │   └── b04dd54a-4a10-4fcb-9245-14c158c983a1.vsidx
+│       │   │   └── v18/
+│       │   │       ├── .futdcache.v2
+│       │   │       ├── .suo
+│       │   │       ├── DocumentLayout.backup.json
+│       │   │       └── DocumentLayout.json
+│       │   ├── ProjectEvaluation/
+│       │   │   ├── alertaja.api.metadata.v10.bin
+│       │   │   ├── alertaja.api.projects.v10.bin
+│       │   │   └── alertaja.api.strings.v10.bin
+│       │   └── sd/
+│       ├── bin/
+│       │   └── Debug/
+│       │       └── net10.0/
+│       │           ├── runtimes/
+│       │           │   ├── linux/
+│       │           │   │   └── lib/
+│       │           │   │       └── net8.0/
+│       │           │   │           └── System.DirectoryServices.Protocols.dll
+│       │           │   ├── osx/
+│       │           │   │   └── lib/
+│       │           │   │       └── net8.0/
+│       │           │   │           └── System.DirectoryServices.Protocols.dll
+│       │           │   └── win/
+│       │           │       └── lib/
+│       │           │           └── net8.0/
+│       │           │               ├── System.Diagnostics.PerformanceCounter.dll
+│       │           │               └── System.DirectoryServices.Protocols.dll
+│       │           ├── AlertaJa.Api.deps.json
+│       │           ├── AlertaJa.Api.dll
+│       │           ├── AlertaJa.Api.exe
+│       │           ├── AlertaJa.Api.pdb
+│       │           ├── AlertaJa.Api.runtimeconfig.json
+│       │           ├── AlertaJa.Api.staticwebassets.endpoints.json
+│       │           ├── appsettings.Development.json
+│       │           ├── appsettings.json
+│       │           ├── DotNetEnv.dll
+│       │           ├── Microsoft.AspNetCore.Authentication.JwtBearer.dll
+│       │           ├── Microsoft.AspNetCore.OpenApi.dll
+│       │           ├── Microsoft.EntityFrameworkCore.Abstractions.dll
+│       │           ├── Microsoft.EntityFrameworkCore.dll
+│       │           ├── Microsoft.EntityFrameworkCore.Relational.dll
+│       │           ├── Microsoft.IdentityModel.Abstractions.dll
+│       │           ├── Microsoft.IdentityModel.JsonWebTokens.dll
+│       │           ├── Microsoft.IdentityModel.Logging.dll
+│       │           ├── Microsoft.IdentityModel.Protocols.dll
+│       │           ├── Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+│       │           ├── Microsoft.IdentityModel.Tokens.dll
+│       │           ├── Microsoft.OpenApi.dll
+│       │           ├── Oracle.EntityFrameworkCore.dll
+│       │           ├── Oracle.ManagedDataAccess.dll
+│       │           ├── Superpower.dll
+│       │           ├── System.Configuration.ConfigurationManager.dll
+│       │           ├── System.Diagnostics.PerformanceCounter.dll
+│       │           ├── System.DirectoryServices.Protocols.dll
+│       │           ├── System.IdentityModel.Tokens.Jwt.dll
+│       │           └── System.Security.Cryptography.ProtectedData.dll
+│       ├── Controllers/
+│       │   ├── AlertasController.cs
+│       │   ├── AuthController.cs
+│       │   ├── MedicoesController.cs
+│       │   ├── RegioesController.cs
+│       │   ├── SensoresController.cs
+│       │   └── StatusController.cs
+│       ├── Data/
+│       │   └── AppDbContext.cs
+│       ├── DTOs/
+│       │   ├── Alertas/
+│       │   │   └── AlertaResponseDto.cs
+│       │   ├── Auth/
+│       │   │   ├── LoginDto.cs
+│       │   │   └── LoginResponseDto.cs
+│       │   ├── Medicoes/
+│       │   │   ├── MedicaoResponseDto.cs
+│       │   │   └── ReceberMedicaoDto.cs
+│       │   ├── Regioes/
+│       │   │   ├── AtualizarRegiaoDto.cs
+│       │   │   ├── CriarRegiaoDto.cs
+│       │   │   └── RegiaoResponseDto.cs
+│       │   └── Sensores/
+│       │       ├── AtualizarSensorDto.cs
+│       │       ├── CriarSensorDto.cs
+│       │       └── SensorResponseDto.cs
+│       ├── Enums/
+│       │   └── TipoSensor.cs
+│       ├── Models/
+│       │   ├── Alerta.cs
+│       │   ├── Medicao.cs
+│       │   ├── Regiao.cs
+│       │   ├── Sensor.cs
+│       │   └── Usuario.cs
+│       ├── obj/
+│       │   ├── Debug/
+│       │   │   └── net10.0/
+│       │   │       ├── EndpointInfo/
+│       │   │       │   ├── AlertaJa.Api.json
+│       │   │       │   └── AlertaJa.Api.OpenApiFiles.cache
+│       │   │       ├── ref/
+│       │   │       │   └── AlertaJa.Api.dll
+│       │   │       ├── refint/
+│       │   │       │   └── AlertaJa.Api.dll
+│       │   │       ├── staticwebassets/
+│       │   │       ├── .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+│       │   │       ├── AlertaJa.23E9589F.Up2Date
+│       │   │       ├── AlertaJa.Api.AssemblyInfo.cs
+│       │   │       ├── AlertaJa.Api.AssemblyInfoInputs.cache
+│       │   │       ├── AlertaJa.Api.assets.cache
+│       │   │       ├── AlertaJa.Api.csproj.AssemblyReference.cache
+│       │   │       ├── AlertaJa.Api.csproj.BuildWithSkipAnalyzers
+│       │   │       ├── AlertaJa.Api.csproj.CoreCompileInputs.cache
+│       │   │       ├── AlertaJa.Api.csproj.FileListAbsolute.txt
+│       │   │       ├── AlertaJa.Api.dll
+│       │   │       ├── AlertaJa.Api.GeneratedMSBuildEditorConfig.editorconfig
+│       │   │       ├── AlertaJa.Api.genruntimeconfig.cache
+│       │   │       ├── AlertaJa.Api.GlobalUsings.g.cs
+│       │   │       ├── AlertaJa.Api.MvcApplicationPartsAssemblyInfo.cache
+│       │   │       ├── AlertaJa.Api.MvcApplicationPartsAssemblyInfo.cs
+│       │   │       ├── AlertaJa.Api.pdb
+│       │   │       ├── AlertaJa.Api.sourcelink.json
+│       │   │       ├── ApiEndpoints.json
+│       │   │       ├── apphost.exe
+│       │   │       ├── rjsmcshtml.dswa.cache.json
+│       │   │       ├── rjsmrazor.dswa.cache.json
+│       │   │       ├── rpswa.dswa.cache.json
+│       │   │       ├── staticwebassets.build.endpoints.json
+│       │   │       ├── staticwebassets.build.json
+│       │   │       ├── staticwebassets.build.json.cache
+│       │   │       ├── staticwebassets.references.upToDateCheck.txt
+│       │   │       ├── staticwebassets.removed.txt
+│       │   │       └── swae.build.ex.cache
+│       │   ├── AlertaJa.Api.csproj.nuget.dgspec.json
+│       │   ├── AlertaJa.Api.csproj.nuget.g.props
+│       │   ├── AlertaJa.Api.csproj.nuget.g.targets
+│       │   ├── project.assets.json
+│       │   └── project.nuget.cache
+│       ├── Properties/
+│       │   └── launchSettings.json
+│       ├── Services/
+│       │   ├── AlertaService.cs
+│       │   ├── AuthService.cs
+│       │   ├── MedicaoService.cs
+│       │   ├── RegiaoService.cs
+│       │   └── SensorService.cs
+│       ├── AlertaJa.Api.csproj
+│       ├── AlertaJa.Api.csproj.Backup.tmp
+│       ├── AlertaJa.Api.csproj.user
+│       ├── AlertaJa.Api.http
+│       ├── AlertaJa.Api.slnx
+│       ├── appsettings.Development.json
+│       ├── appsettings.json
+│       └── Program.cs
+├── simulator/
+│   ├── como_executar.txt
+│   └── simulate_sensors.py
+├── .env
+├── .gitattributes
+├── .gitignore
+├── db_ddl.sql
+├── db_dml.sql
+├── estrutura.txt
+└── README.md

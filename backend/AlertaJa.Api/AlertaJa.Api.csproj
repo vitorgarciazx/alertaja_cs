@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -8,23 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< Updated upstream
-=======
-    <Compile Remove="Data\NovaPasta\**" />
-    <Content Remove="Data\NovaPasta\**" />
-    <EmbeddedResource Remove="Data\NovaPasta\**" />
-    <None Remove="Data\NovaPasta\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
->>>>>>> Stashed changes
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="10.23.26400" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\NovaPasta\" />
   </ItemGroup>
 
 </Project>

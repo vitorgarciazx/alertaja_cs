@@ -1,5 +1,6 @@
 ﻿using AlertaJa.Api.DTOs.Sensores;
 using AlertaJa.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlertaJa.Api.Controllers
@@ -37,6 +38,7 @@ namespace AlertaJa.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ROLE_ADMIN")]
         public async Task<IActionResult> Criar(CriarSensorDto dto)
         {
             var sensor = await _service.Criar(dto);
@@ -49,6 +51,7 @@ namespace AlertaJa.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "ROLE_ADMIN")]
         public async Task<IActionResult> Atualizar(Guid id, AtualizarSensorDto dto)
         {
             var sensor = await _service.Atualizar(id, dto);

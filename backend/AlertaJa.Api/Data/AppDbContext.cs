@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-﻿using AlertaJa.Api.Models;
+﻿
+using Microsoft.EntityFrameworkCore;
+using AlertaJa.Api.Models;
 
 namespace AlertaJa.Api.Data
 {
@@ -7,8 +8,9 @@ namespace AlertaJa.Api.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
-    {
-    }
+        {
+        }
+
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Regiao> Regioes { get; set; }
         public DbSet<Sensor> Sensores { get; set; }
@@ -18,6 +20,7 @@ namespace AlertaJa.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             // USUARIOS
             modelBuilder.Entity<Usuario>(entity =>
             {
@@ -53,9 +56,10 @@ namespace AlertaJa.Api.Data
 
                 entity.Property(u => u.CriadoEm)
                     .HasColumnName("CRIADO_EM")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .IsRequired();
             });
-            
+
             // REGIOES
             modelBuilder.Entity<Regiao>(entity =>
             {
@@ -176,9 +180,14 @@ namespace AlertaJa.Api.Data
 
                 entity.HasIndex(s => s.CodigoIdentificador)
                     .IsUnique();
+
+                entity.HasOne(s => s.Regiao)
+                    .WithMany(r => r.Sensores)
+                    .HasForeignKey(s => s.RegiaoId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
-            //MEDICOES
+            // MEDICOES
             modelBuilder.Entity<Medicao>(entity =>
             {
                 entity.ToTable("MEDICOES");
@@ -218,8 +227,8 @@ namespace AlertaJa.Api.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // ALERTA
-            modelBuilder.Entity<Alerta>(entity => 
+            // ALERTAS
+            modelBuilder.Entity<Alerta>(entity =>
             {
                 entity.ToTable("ALERTAS");
 
@@ -251,12 +260,12 @@ namespace AlertaJa.Api.Data
 
                 entity.Property(a => a.MedicaoUltimaId)
                     .HasColumnName("MEDICAO_ULTIMA_ID")
-                    .HasColumnType("VARCHAR(36)")
+                    .HasColumnType("VARCHAR2(36)")
                     .HasConversion<string>();
 
                 entity.Property(a => a.Nivel)
                     .HasColumnName("NIVEL")
-                    .HasColumnType("VARCHAR(20)")
+                    .HasColumnType("VARCHAR2(20)")
                     .IsRequired();
 
                 entity.Property(a => a.Status)
@@ -268,6 +277,16 @@ namespace AlertaJa.Api.Data
                 entity.Property(a => a.Titulo)
                     .HasColumnName("TITULO")
                     .HasMaxLength(150)
+                    .IsRequired();
+
+                entity.Property(a => a.Descricao)
+                    .HasColumnName("DESCRICAO")
+                    .HasColumnType("CLOB");
+
+                entity.Property(a => a.Ativo)
+                    .HasColumnName("ATIVO")
+                    .HasColumnType("NUMBER(1)")
+                    .HasDefaultValue(true)
                     .IsRequired();
 
                 entity.Property(a => a.DataEmissao)
@@ -282,6 +301,11 @@ namespace AlertaJa.Api.Data
                 entity.Property(a => a.DataResolucao)
                     .HasColumnName("DATA_RESOLUCAO")
                     .HasColumnType("TIMESTAMP");
+
+                entity.HasOne(a => a.Regiao)
+                    .WithMany(r => r.Alertas)
+                    .HasForeignKey(a => a.RegiaoId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(a => a.Sensor)
                     .WithMany(s => s.Alertas)

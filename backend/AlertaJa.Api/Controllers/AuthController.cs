@@ -2,6 +2,7 @@
 using AlertaJa.Api.DTOs.Auth;
 using AlertaJa.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlertaJa.Api.Controllers
 {
@@ -17,6 +18,7 @@ namespace AlertaJa.Api.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(
             [FromBody] LoginDto dto)
         {

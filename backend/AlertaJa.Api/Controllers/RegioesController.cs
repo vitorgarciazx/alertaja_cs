@@ -1,5 +1,6 @@
 ﻿using AlertaJa.Api.DTOs.Regioes;
 using AlertaJa.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlertaJa.Api.Controllers
@@ -38,6 +39,7 @@ namespace AlertaJa.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ROLE_ADMIN")]
         public async Task<IActionResult> Criar(CriarRegiaoDto dto)
         {
             var regiao = await _service.Criar(dto);
@@ -50,6 +52,7 @@ namespace AlertaJa.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "ROLE_ADMIN")]
         public async Task<IActionResult> Atualizar(Guid id, AtualizarRegiaoDto dto)
         {
             var regiao = await _service.Atualizar(id, dto);

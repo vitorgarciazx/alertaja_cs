@@ -9,12 +9,16 @@ namespace AlertaJa.Api.Services
     public class MedicaoService
     {
         private readonly AppDbContext _context;
+private readonly AlertaService _alertaService;
 
-        public MedicaoService(AppDbContext context)
-        {
-            _context = context;
-        }
-
+public MedicaoService(
+    AppDbContext context,
+    AlertaService alertaService)
+{
+    _context = context;
+    _alertaService = alertaService;
+}
+        //registra novas medicoes
         public async Task Receber(ReceberMedicaoDto dto)
         {
             if (dto.SensorId == Guid.Empty)
@@ -53,7 +57,51 @@ namespace AlertaJa.Api.Services
 
             _context.Medicoes.Add(medicao);
 
+            await _alertaService.ProcessarMedicao(
+                sensor,
+                medicao,
+                agora
+            );
+
             await _context.SaveChangesAsync();
         }
+
+        //lista todas
+        public async Task<List<MedicaoResponseDto>> ListarTodas()
+        {
+            return await _context.Medicoes
+                .AsNoTracking()
+                .OrderByDescending(m => m.DataHora)
+                .Select(m => new MedicaoResponseDto
+                {
+                    Id = m.Id,
+                    SensorId = m.SensorId,
+                    CodigoIdentificador = m.Sensor!.CodigoIdentificador,
+                    UnidadeMedida = m.Sensor!.UnidadeMedida,
+                    Valor = m.Valor,
+                    DataHora = m.DataHora
+                })
+                .ToListAsync();
+        }
+
+        //lista por id
+        public async Task<MedicaoResponseDto?> ObterPorId(Guid id)
+        {
+            return await _context.Medicoes
+                .AsNoTracking()
+                .Where(m => m.Id == id)
+                .Select(m => new MedicaoResponseDto
+                {
+                    Id = m.Id,
+                    SensorId = m.SensorId,
+                    CodigoIdentificador = m.Sensor!.CodigoIdentificador,
+                    UnidadeMedida = m.Sensor!.UnidadeMedida,
+                    Valor = m.Valor,
+                    DataHora = m.DataHora
+                })
+                .FirstOrDefaultAsync();
+        }
+
+
     }
 }
